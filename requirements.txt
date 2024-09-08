@@ -1,6 +1,6 @@
 streamlit
 openai
-google-generativeai==0.6.0
+google-generativeai
 pypdf
 python-dotenv
 pdf2image
