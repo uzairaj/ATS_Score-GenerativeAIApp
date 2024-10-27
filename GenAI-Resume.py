@@ -4,7 +4,7 @@ import os
 import io
 import pdf2image
 import google.generativeai as genai
-
+import fitz  # PyMuPDF
 ## Streamlit App
 st.set_page_config(page_title="ATS Resume Expert")
 st.header("Applicant Tracking System Score")
@@ -42,7 +42,15 @@ def input_pdf_setup(uploaded_file):
     else:
         raise FileNotFoundError("No file uploaded")
 
-
+def pdf_textextract(uploaded_file):
+    pdf = fitz.open(stream=uploaded_file.read(), filetype="pdf")
+    content = ''
+    # Extract text from all pages
+    for page in pdf:
+        text = page.get_text("text")
+        print(text)
+        content += text
+    return content
 
 input_text = st.text_area("Job Description: ", key="input")
 uploaded_file = st.file_uploader("Upload your resume (PDF)...", type=["pdf"])
@@ -61,7 +69,9 @@ the job description. First the output should come as percentage and then keyword
 if submit3:
     if api_key:
         if uploaded_file is not None:
-            pdf_content = input_pdf_setup(uploaded_file)
+            print(uploaded_file)
+            pdf_content = pdf_textextract(uploaded_file)
+            print(pdf_content)
             response = get_gemini_response(input_prompt3, pdf_content, input_text)
             st.subheader("The Response is")
             st.write(response)
