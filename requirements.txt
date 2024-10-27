@@ -3,3 +3,4 @@ google-generativeai
 pypdf
 python-dotenv
 pdf2image
+fitz
